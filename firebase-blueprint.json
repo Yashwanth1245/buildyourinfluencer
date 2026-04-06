@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "influencer": {
+      "title": "Influencer",
+      "description": "An AI influencer persona created by a user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "personality": { "type": "string" },
+        "appearance": { "type": "string" },
+        "bio": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["id", "name", "personality", "appearance", "bio", "createdAt", "ownerId"]
+    },
+    "content": {
+      "title": "Generated Content",
+      "description": "Content (images or text) generated for an influencer.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "influencerId": { "type": "string" },
+        "type": { "type": "string", "enum": ["image", "text", "video"] },
+        "content": { "type": "string" },
+        "prompt": { "type": "string" },
+        "createdAt": { "type": "number" },
+        "ownerId": { "type": "string" }
+      },
+      "required": ["id", "influencerId", "type", "content", "prompt", "createdAt", "ownerId"]
+    }
+  },
+  "firestore": {
+    "/influencers/{influencerId}": {
+      "schema": "influencer",
+      "description": "Collection of AI influencers."
+    },
+    "/content/{contentId}": {
+      "schema": "content",
+      "description": "Collection of generated content for influencers."
+    }
+  }
+}

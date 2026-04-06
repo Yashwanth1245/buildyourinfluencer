@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: influencers
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required, 1-50 chars)
+    //   - personality: string (required, 1-100 chars)
+    //   - appearance: string (required, 1-1000 chars)
+    //   - bio: string (required, 1-500 chars)
+    //   - avatarUrl: string (optional)
+    //   - createdAt: number (required)
+    //   - ownerId: string (required, matches auth.uid)
+    //
+    // Collection: content
+    // Fields:
+    //   - id: string (required)
+    //   - influencerId: string (required)
+    //   - type: string (required, 'image' or 'text')
+    //   - content: string (required)
+    //   - prompt: string (required, 1-500 chars)
+    //   - createdAt: number (required)
+    //   - ownerId: string (required, matches auth.uid)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isDocOwner() {
+      return isAuthenticated() && request.auth.uid == resource.data.ownerId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isValidInfluencer(data) {
+      return data.keys().hasAll(['name', 'personality', 'appearance', 'bio', 'createdAt', 'ownerId']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 50 &&
+             data.personality is string && data.personality.size() > 0 && data.personality.size() <= 100 &&
+             data.appearance is string && data.appearance.size() > 0 && data.appearance.size() <= 1000 &&
+             data.bio is string && data.bio.size() > 0 && data.bio.size() <= 500 &&
+             data.createdAt is number &&
+             data.ownerId == request.auth.uid;
+    }
+
+    function isValidContent(data) {
+      return data.keys().hasAll(['type', 'content', 'prompt', 'createdAt', 'ownerId']) &&
+             (!('influencerId' in data) || data.influencerId is string) &&
+             (!('id' in data) || data.id is string) &&
+             data.type in ['image', 'text', 'video'] &&
+             data.content is string &&
+             data.prompt is string && data.prompt.size() > 0 && data.prompt.size() <= 1000 &&
+             data.createdAt is number &&
+             data.ownerId == request.auth.uid;
+    }
+
+    match /influencers/{influencerId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidInfluencer(request.resource.data);
+      allow update: if isDocOwner() && isValidInfluencer(request.resource.data);
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /content/{contentId} {
+      allow read: if isDocOwner() || isAdmin();
+      allow create: if isAuthenticated() && isValidContent(request.resource.data);
+      allow update: if isDocOwner() && isValidContent(request.resource.data);
+      allow delete: if isDocOwner() || isAdmin();
+    }
+
+    match /motion_templates/{templateId} {
+      allow read: if true;
+      allow write: if false; // Locked to Script/Service Account
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId && 
+                    !request.resource.data.diff(resource.data).affectedKeys()
+                    .hasAny(['credits', 'role', 'maxCredits']);
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

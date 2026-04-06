@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Code analysis tool artifacts
+.code-review-graph/
+code-review-graph/
+
+# Firebase Security
+service-account.json
