@@ -69,7 +69,7 @@ const validate = (req, res, next) => {
 // --- Security: Rate Limiting ---
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 200, // Limit each IP to 200 requests per 15 mins
+  max: 1000, // Limit each IP to 1000 requests per 15 mins (More lenient for SPAs)
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: "Too many requests from this IP, please try again in 15 minutes." }
