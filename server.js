@@ -1190,5 +1190,5 @@ if (fs.existsSync(path.join(__dirname, 'dist'))) {
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-  console.log(`PersonaAI SECURED Persistence Backend on port ${PORT}`);
+  console.log(`BuildYourInfluencer SECURED Persistence Backend on port ${PORT}`);
 });

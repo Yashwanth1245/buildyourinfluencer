@@ -61,7 +61,7 @@ export function ImagePreviewModal({ image, allVersions, onSelectVersion, onClose
             <button 
               onClick={() => {
                 const ext = image.type === 'video' ? 'mp4' : 'jpg';
-                downloadMedia(image.content, `PersonaAI_${image.id}.${ext}`);
+                downloadMedia(image.content, `BuildYourInfluencer_${image.id}.${ext}`);
               }}
               className="btn-primary flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full"
             >

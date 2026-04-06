@@ -1,7 +1,7 @@
 import { auth } from '../firebase';
 
 /**
- * PERSONAAI CLIENT SERVICE
+ * BUILDYOURINFLUENCER CLIENT SERVICE
  * This service is a thin bridge to the backend persistence layer.
  * All intelligence and API keys are now securely handled on the server.
  */

@@ -92,7 +92,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="w-5 h-5 bg-white rounded flex items-center justify-center">
             <div className="w-2.5 h-2.5 bg-black rotate-45" />
           </div>
-          <span className="text-base font-bold tracking-tight">Persona AI</span>
+          <span className="text-base font-bold tracking-tight">BuildYourInfluencer</span>
         </div>
         <button 
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -108,7 +108,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="w-6 h-6 bg-white rounded flex items-center justify-center">
             <div className="w-3 h-3 bg-black rotate-45" />
           </div>
-          <span className="text-lg font-bold tracking-tight">Persona AI</span>
+          <span className="text-lg font-bold tracking-tight">BuildYourInfluencer</span>
         </div>
 
         <nav className="flex-1 px-4 space-y-1 mt-4">
@@ -190,7 +190,7 @@ export default function Layout({ children }: LayoutProps) {
                 <div className="w-6 h-6 bg-white rounded flex items-center justify-center">
                   <div className="w-3 h-3 bg-black rotate-45" />
                 </div>
-                <span className="text-lg font-bold tracking-tight">Persona AI</span>
+                <span className="text-lg font-bold tracking-tight">BuildYourInfluencer</span>
               </div>
 
               <nav className="flex-1 px-4 space-y-1 mt-8">

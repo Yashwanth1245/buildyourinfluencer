@@ -155,7 +155,7 @@ export default function Landing() {
           <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-md flex items-center justify-center">
             <div className="w-3 h-3 sm:w-4 sm:h-4 bg-black rotate-45" />
           </div>
-          <span className="text-lg sm:text-xl font-bold tracking-tight">Persona AI</span>
+          <span className="text-lg sm:text-xl font-bold tracking-tight">BuildYourInfluencer</span>
         </div>
         
         <div className="hidden lg:flex items-center gap-8">
@@ -464,7 +464,7 @@ export default function Landing() {
               <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
                 <div className="w-4 h-4 bg-black rotate-45" />
               </div>
-              <span className="text-white text-xl font-bold tracking-tight uppercase">Persona AI</span>
+              <span className="text-white text-xl font-bold tracking-tight uppercase">BuildYourInfluencer</span>
             </div>
             <p className="text-neutral-500 text-sm max-w-xs leading-relaxed font-light">
               The world's leading generative studio for consistent AI personas. Empowering creators and brands to scale their digital presence with surgical precision.
@@ -500,7 +500,7 @@ export default function Landing() {
 
         <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-10">
-            <p className="text-neutral-600 text-xs font-medium">© 2026 PERSONA AI INC. ALL RIGHTS RESERVED.</p>
+            <p className="text-neutral-600 text-xs font-medium">© 2026 BUILDYOURINFLUENCER. ALL RIGHTS RESERVED.</p>
             <div className="hidden md:flex items-center gap-6">
               <span className="flex items-center gap-2 text-neutral-600 text-[10px] uppercase tracking-widest font-black italic">
                 <Shield className="w-3 h-3" /> Encrypted Endpoint
@@ -567,11 +567,11 @@ export default function Landing() {
                   <div className="prose prose-invert max-w-none space-y-10">
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">1. Agreement to Terms</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">By accessing and using Persona AI (persona-ai.studio), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our service.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">By accessing and using BuildYourInfluencer (buildyourinfluencer.com), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our service.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">2. Description of Service</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">Persona AI provides AI-powered video editing and content creation services. Our platform allows users to create, edit, and enhance video content using artificial intelligence technology.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">BuildYourInfluencer provides AI-powered video editing and content creation services. Our platform allows users to create, edit, and enhance video content using artificial intelligence technology.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">3. User Accounts</h3>
@@ -589,19 +589,19 @@ export default function Landing() {
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">5. Content Rights</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">You retain all rights to your content. By using our service, you grant Persona AI a license to use, modify, and process your content solely for the purpose of providing our services to you.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">You retain all rights to your content. By using our service, you grant BuildYourInfluencer a license to use, modify, and process your content solely for the purpose of providing our services to you.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">6. Payment Terms</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">Some features of Persona AI require payment. You agree to pay all fees according to the pricing established on our website. All payments are non-refundable unless otherwise specified.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">Some features of BuildYourInfluencer require payment. You agree to pay all fees according to the pricing established on our website. All payments are non-refundable unless otherwise specified.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">8. Limitation of Liability</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">Persona AI shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">BuildYourInfluencer shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use or inability to use the service.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">13. Governing Law</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Persona AI operates, without regard to its conflict of law provisions.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which BuildYourInfluencer operates, without regard to its conflict of law provisions.</p>
                     </section>
                   </div>
                 )}
@@ -610,7 +610,7 @@ export default function Landing() {
                   <div className="prose prose-invert max-w-none space-y-12">
                     <section className="space-y-6">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">Introduction</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">Welcome to Persona AI. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website (persona-ai.studio) and tell you about your privacy rights and how the law protects you. Persona AI is the controller and responsible for your personal data.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">Welcome to BuildYourInfluencer. We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website (buildyourinfluencer.com) and tell you about your privacy rights and how the law protects you. BuildYourInfluencer is the controller and responsible for your personal data.</p>
                     </section>
 
                     <section className="space-y-6">
@@ -645,7 +645,7 @@ export default function Landing() {
                   <div className="prose prose-invert max-w-none space-y-10">
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">What are cookies?</h3>
-                      <p className="text-neutral-400 font-light leading-relaxed">Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners (in this case, Persona AI) in order to make their websites work, or to work more efficiently.</p>
+                      <p className="text-neutral-400 font-light leading-relaxed">Cookies are small data files that are placed on your computer or mobile device when you visit a website. Cookies are widely used by website owners (in this case, BuildYourInfluencer) in order to make their websites work, or to work more efficiently.</p>
                     </section>
                     <section className="space-y-4">
                       <h3 className="text-lg font-bold uppercase tracking-widest text-white/80">How we use cookies</h3>
@@ -670,7 +670,7 @@ export default function Landing() {
                           <div className="w-16 h-12 bg-red-500/10 rounded flex items-center justify-center font-black italic text-red-400">24H</div>
                           <h3 className="text-2xl font-serif italic">Refund Eligibility</h3>
                         </div>
-                        <p className="text-neutral-400 font-light leading-relaxed mb-6">At Persona AI, we strive to provide the best experience. Please read our refund policy carefully before making a purchase.</p>
+                        <p className="text-neutral-400 font-light leading-relaxed mb-6">At BuildYourInfluencer, we strive to provide the best experience. Please read our refund policy carefully before making a purchase.</p>
                         
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-10">
                           <div className="space-y-2">
@@ -678,8 +678,7 @@ export default function Landing() {
                             <p className="text-neutral-500 text-sm font-light leading-relaxed">Refund requests must be made within **24 hours** of purchase. After this period, no refunds can be processed.</p>
                           </div>
                           <div className="space-y-2">
-                            <p className="text-white font-bold text-xs uppercase tracking-widest">Support Channel</p>
-                            <p className="text-neutral-500 text-sm font-light leading-relaxed">Reach out to our team at:<br/><span className="text-white/80 underline">service@persona-ai.studio</span></p>
+                            <p className="text-neutral-500 text-sm font-light leading-relaxed">Reach out to our team at:<br/><span className="text-white/80 underline">support@buildyourinfluencer.com</span></p>
                           </div>
                         </div>
                       </div>
@@ -694,7 +693,7 @@ export default function Landing() {
 
               {/* Footer */}
               <div className="p-8 border-t border-white/5 bg-white/[0.02] flex items-center justify-between">
-                <p className="text-neutral-500 text-xs font-light">Questions? Contact <span className="text-white/80 underline cursor-pointer">support@persona-ai.studio</span></p>
+                <p className="text-neutral-500 text-xs font-light">Questions? Contact <span className="text-white/80 underline cursor-pointer">support@buildyourinfluencer.com</span></p>
                 <button 
                   onClick={() => setLegalModal(null)}
                   className="btn-primary py-3 px-8 text-xs font-bold"

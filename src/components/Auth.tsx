@@ -137,7 +137,7 @@ export default function Auth() {
               </h1>
               <p className="text-[11px] uppercase tracking-[0.2em] text-neutral-500 font-bold">
                 {mode === 'login' && 'Enter credentials to access your studio'}
-                {mode === 'signup' && 'Start your journey with Persona AI'}
+                {mode === 'signup' && 'Start your journey with BuildYourInfluencer'}
                 {mode === 'forgot-password' && 'Enter your email to receive a recovery link'}
               </p>
             </motion.div>
