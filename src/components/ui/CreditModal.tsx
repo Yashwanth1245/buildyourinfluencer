@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, Check, Zap, Sparkles, ChevronRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { PLANS, TRY_PACK } from '../../lib/constants';
+import { loadRazorpayScript } from '../../lib/razorpay';
+import { auth } from '../../firebase';
 
 interface CreditModalProps {
   isOpen: boolean;
@@ -13,6 +15,92 @@ interface CreditModalProps {
 
 export default function CreditModal({ isOpen, onClose, userCredits, requiredCredits }: CreditModalProps) {
   const [billingCycle, setBillingCycle] = React.useState<'monthly' | 'yearly'>('yearly');
+  const [loadingPlan, setLoadingPlan] = React.useState<string | null>(null);
+
+  const handlePurchase = async (planId: string) => {
+    setLoadingPlan(planId);
+    try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert('Razorpay SDK failed to load. Are you online?');
+        return;
+      }
+
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) {
+        alert('Please sign in to purchase credits.');
+        return;
+      }
+
+      // 1. Create Order on Backend
+      const orderRes = await fetch('/api/payments/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ planId, billingCycle })
+      });
+
+      if (!orderRes.ok) throw new Error('Failed to create payment order');
+      const orderData = await orderRes.json();
+
+      // 2. Open Razorpay Checkout
+      const options = {
+        key: 'rzp_test_SaBtdiCU02Wb6u', // Test Key
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "BuildYourInfluencer",
+        description: `Refill: ${planId} (${billingCycle})`,
+        order_id: orderData.id,
+        handler: async (response: any) => {
+          // 3. Verify Payment on Backend
+          try {
+            const verifyRes = await fetch('/api/payments/verify', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                planId
+              })
+            });
+
+            if (verifyRes.ok) {
+              alert('Payment successful! Your credits have been updated.');
+              onClose();
+              window.location.reload(); // Refresh to sync balance
+            } else {
+              alert('Payment verification failed. Please contact support.');
+            }
+          } catch (err) {
+            console.error('Verification Error:', err);
+            alert('An error occurred during verification.');
+          }
+        },
+        prefill: {
+          name: auth.currentUser?.displayName || '',
+          email: auth.currentUser?.email || '',
+        },
+        theme: {
+          color: "#000000"
+        }
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+
+    } catch (error) {
+      console.error('Purchase Error:', error);
+      alert('Failed to initiate purchase. Please try again.');
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -157,19 +245,50 @@ export default function CreditModal({ isOpen, onClose, userCredits, requiredCred
                       </div>
 
                       <button 
+                        onClick={() => handlePurchase(plan.id)}
+                        disabled={loadingPlan !== null}
                         className={cn(
-                          "w-full py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-1.5",
+                          "w-full py-2.5 rounded-lg text-[8px] font-black uppercase tracking-[0.15em] transition-all flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed",
                           isPopular 
                             ? "bg-white text-black hover:bg-neutral-200" 
                             : "bg-white/5 text-white hover:bg-white/10 border border-white/10"
                         )}
                       >
-                        Select Suite
-                        <ChevronRight className="w-3 h-3" />
+                        {loadingPlan === plan.id ? 'Processing...' : 'Select Suite'}
+                        {loadingPlan !== plan.id && <ChevronRight className="w-3 h-3" />}
                       </button>
                     </div>
                   );
                 })}
+              </div>
+
+              {/* One-time Try Pack */}
+              <div className="max-w-4xl mx-auto w-full">
+                <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10">
+                      <Zap className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-black uppercase tracking-widest text-white">{TRY_PACK.name}</h4>
+                      <p className="text-[9px] text-neutral-500 italic mt-0.5">{TRY_PACK.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <div className="text-xl font-serif italic text-white">${TRY_PACK.price}</div>
+                      <div className="text-[7px] font-bold text-neutral-500 uppercase tracking-widest">One-time</div>
+                    </div>
+                    <button 
+                      onClick={() => handlePurchase(TRY_PACK.id)}
+                      disabled={loadingPlan !== null}
+                      className="px-8 py-2.5 bg-white text-black rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-neutral-200 transition-all disabled:opacity-50"
+                    >
+                      {loadingPlan === TRY_PACK.id ? 'Processing...' : 'Get 40 Credits'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 

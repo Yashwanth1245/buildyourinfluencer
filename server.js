@@ -18,6 +18,8 @@ import path from 'path';
 import helmet from 'helmet';
 import cors from 'cors';
 import { GoogleGenAI } from "@google/genai";
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
 
 ffmpeg.setFfmpegPath(ffmpegPath.path);
 
@@ -138,6 +140,26 @@ const VIDGO_API_KEY = process.env.VIDGO_API_KEY;
 const VIDGO_BASE_URL = "https://api.vidgo.ai/api";
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'kyashwanth1133@gmail.com';
 
+// --- Payments: Razorpay Initialization ---
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_SaBtdiCU02Wb6u',
+  key_secret: process.env.RAZORPAY_KEY_SECRET || '9dhT4AdQ6R0rHXNXA8ktUT47'
+});
+
+const PLAN_PRICES = {
+  'starter': { monthly: 19, yearly: 19 },
+  'professional': { monthly: 39, yearly: 35 },
+  'business': { monthly: 79, yearly: 71 },
+  'try_pack': { monthly: 5, yearly: 5 }
+};
+
+const PLAN_CREDITS = {
+  'starter': 170,
+  'professional': 400,
+  'business': 800,
+  'try_pack': 40
+};
+
 // --- Authentication Middleware ---
 const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -155,6 +177,82 @@ const verifyToken = async (req, res, next) => {
     res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }
 };
+
+// --- Payments: Endpoints ---
+server.post('/api/payments/create-order', verifyToken, async (req, res) => {
+  const { planId, billingCycle } = req.body;
+  
+  const plan = PLAN_PRICES[planId];
+  if (!plan) return res.status(400).json({ error: 'Invalid plan selected' });
+
+  const priceUSD = billingCycle === 'yearly' ? plan.yearly : plan.monthly;
+  const amountINR = Math.round(priceUSD * 80 * 100); // 80 INR/USD conversion, in Paise
+
+  try {
+    const options = {
+      amount: amountINR,
+      currency: "INR",
+      receipt: `receipt_${uuidv4().substring(0, 8)}`,
+      notes: {
+        planId,
+        billingCycle,
+        userId: req.user.uid
+      }
+    };
+
+    const order = await razorpay.orders.create(options);
+    res.json(order);
+  } catch (error) {
+    console.error('[Razorpay Order Error]', error);
+    res.status(500).json({ error: 'Failed to create payment order' });
+  }
+});
+
+server.post('/api/payments/verify', verifyToken, async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, planId } = req.body;
+
+  const sign = razorpay_order_id + "|" + razorpay_payment_id;
+  const expectedSign = crypto
+    .createHmac("sha256", razorpay.key_secret)
+    .update(sign.toString())
+    .digest("hex");
+
+  if (razorpay_signature === expectedSign) {
+    // Payment is authentic
+    try {
+      const creditsToAdd = PLAN_CREDITS[planId];
+      if (!creditsToAdd) throw new Error('Invalid plan ID for verification');
+
+      const userRef = db.collection('users').doc(req.user.uid);
+      const userDoc = await userRef.get();
+      
+      let currentCredits = 0;
+      let currentMaxCredits = 10;
+
+      if (userDoc.exists) {
+        const data = userDoc.data();
+        currentCredits = data.credits || 0;
+        currentMaxCredits = data.maxCredits || 10;
+      }
+
+      await userRef.set({
+        credits: currentCredits + creditsToAdd,
+        maxCredits: Math.max(currentMaxCredits, creditsToAdd),
+        lastPaymentId: razorpay_payment_id,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      console.log(`[Payment Success] Credited ${creditsToAdd} to user ${req.user.uid}`);
+      res.json({ success: true, message: "Payment verified and credits added" });
+    } catch (error) {
+      console.error('[Payment Verification Backend Error]', error);
+      res.status(500).json({ error: 'Payment verified but failed to update credits' });
+    }
+  } else {
+    console.warn(`[Security] Invalid payment signature for order ${razorpay_order_id}`);
+    res.status(400).json({ error: 'Invalid payment signature' });
+  }
+});
 
 // --- Public: Newsletter Subscribe ---
 server.post('/api/newsletter/subscribe', [
